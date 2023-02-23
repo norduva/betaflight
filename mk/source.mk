@@ -305,6 +305,7 @@ SPEED_OPTIMISED_SRC := $(SPEED_OPTIMISED_SRC) \
             drivers/accgyro_legacy/accgyro_l3gd20.c \
             drivers/accgyro_legacy/accgyro_lsm303dlhc.c \
             drivers/accgyro_legacy/accgyro_mma845x.c \
+            drivers/accgyro_legacy/accgyro_qmi8658.c \
             drivers/adc.c \
             drivers/buf_writer.c \
             drivers/bus.c \
@@ -441,7 +442,8 @@ SIZE_OPTIMISED_SRC := $(SIZE_OPTIMISED_SRC) \
             drivers/accgyro/accgyro_spi_mpu9250.c \
             drivers/accgyro/accgyro_spi_icm20689.c \
             drivers/accgyro/accgyro_spi_icm426xx.c \
-            drivers/accgyro/accgyro_spi_lsm6dso_init.c
+            drivers/accgyro/accgyro_spi_lsm6dso_init.c \
+            drivers/accgyro/accgyro_spi_qmi8658_init.c
 
 
 # F4 and F7 optimizations

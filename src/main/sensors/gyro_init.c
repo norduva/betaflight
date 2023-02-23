@@ -50,6 +50,7 @@
 #include "drivers/accgyro/accgyro_spi_mpu6500.h"
 #include "drivers/accgyro/accgyro_spi_mpu9250.h"
 #include "drivers/accgyro/accgyro_spi_lsm6dsv16x.h"
+#include "drivers/accgyro/accgyro_spi_qmi8658.h"
 
 #ifdef USE_GYRO_L3GD20
 #include "drivers/accgyro/accgyro_spi_l3gd20.h"
@@ -332,6 +333,7 @@ void gyroInitSensor(gyroSensor_t *gyroSensor, const gyroDeviceConfig_t *config)
     case GYRO_LSM6DSV16X:
     case GYRO_ICM42688P:
     case GYRO_ICM42605:
+    case GYRO_QMI8658:
         gyroSensor->gyroDev.gyroHasOverflowProtection = true;
         break;
 
@@ -513,6 +515,15 @@ STATIC_UNIT_TESTED gyroHardware_e gyroDetect(gyroDev_t *dev)
     case GYRO_LSM6DSV16X:
         if (lsm6dsv16xSpiGyroDetect(dev)) {
             gyroHardware = GYRO_LSM6DSV16X;
+            break;
+        }
+        FALLTHROUGH;
+#endif
+
+#ifdef USE_ACCGYRO_QMI8658
+    case GYRO_QMI8658:
+        if (qmi8658SpiGyroDetect(dev)) {
+            gyroHardware = GYRO_QMI8658;
             break;
         }
         FALLTHROUGH;
