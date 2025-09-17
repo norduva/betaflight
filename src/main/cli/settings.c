@@ -1500,6 +1500,7 @@ const clivalue_t valueTable[] = {
     { "osd_sys_vtx_temp_pos",       VAR_UINT16  | MASTER_VALUE, .config.minmaxUnsigned = { 0, OSD_POSCFG_MAX }, PG_OSD_ELEMENT_CONFIG, offsetof(osdElementConfig_t, item_pos[OSD_SYS_VTX_TEMP]) },
     { "osd_sys_fan_speed_pos",      VAR_UINT16  | MASTER_VALUE, .config.minmaxUnsigned = { 0, OSD_POSCFG_MAX }, PG_OSD_ELEMENT_CONFIG, offsetof(osdElementConfig_t, item_pos[OSD_SYS_FAN_SPEED]) },
 #endif
+    { "osd_multiversity_lq_pos",    VAR_UINT16  | MASTER_VALUE, .config.minmaxUnsigned = { 0, OSD_POSCFG_MAX }, PG_OSD_ELEMENT_CONFIG, offsetof(osdElementConfig_t, item_pos[OSD_MULTIVERSITY_LQ]) },
 
     // OSD stats enabled flags are stored as bitmapped values inside a 32bit parameter
     { "osd_stat_bitmask",     VAR_UINT32 | MASTER_VALUE, .config.u32Max = UINT32_MAX, PG_OSD_CONFIG, offsetof(osdConfig_t, enabled_stats)},
@@ -1778,6 +1779,11 @@ const clivalue_t valueTable[] = {
     { "box_user_3_name", VAR_UINT8 | HARDWARE_VALUE | MODE_STRING, .config.string = { 1, MAX_BOX_USER_NAME_LENGTH, STRING_FLAGS_NONE }, PG_MODE_ACTIVATION_CONFIG, offsetof(modeActivationConfig_t, box_user_3_name) },
     { "box_user_4_name", VAR_UINT8 | HARDWARE_VALUE | MODE_STRING, .config.string = { 1, MAX_BOX_USER_NAME_LENGTH, STRING_FLAGS_NONE }, PG_MODE_ACTIVATION_CONFIG, offsetof(modeActivationConfig_t, box_user_4_name) },
 #endif
+
+    { "multiversity_lq1", VAR_UINT8 | MASTER_VALUE | MODE_STRING, .config.string = { 1, 3, STRING_FLAGS_NONE }, PG_OSD_CONFIG, offsetof(osdConfig_t, multiversity_lq1) },
+    { "multiversity_lq2", VAR_UINT8 | MASTER_VALUE | MODE_STRING, .config.string = { 1, 3, STRING_FLAGS_NONE }, PG_OSD_CONFIG, offsetof(osdConfig_t, multiversity_lq2) },
+    { "multiversity_lq3", VAR_UINT8 | MASTER_VALUE | MODE_STRING, .config.string = { 1, 3, STRING_FLAGS_NONE }, PG_OSD_CONFIG, offsetof(osdConfig_t, multiversity_lq3) },
+    { "multiversity_lq4", VAR_UINT8 | MASTER_VALUE | MODE_STRING, .config.string = { 1, 3, STRING_FLAGS_NONE }, PG_OSD_CONFIG, offsetof(osdConfig_t, multiversity_lq4) },
 };
 
 const uint16_t valueTableEntryCount = ARRAYLEN(valueTable);

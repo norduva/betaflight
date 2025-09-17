@@ -430,6 +430,10 @@ void pgResetFn_osdConfig(osdConfig_t *osdConfig)
 #ifdef USE_RACE_PRO
     osdConfig->osd_show_spec_prearm = true;
 #endif // USE_RACE_PRO
+    osdConfig->multiversity_lq1[0] = 0;
+    osdConfig->multiversity_lq2[0] = 0;
+    osdConfig->multiversity_lq3[0] = 0;
+    osdConfig->multiversity_lq4[0] = 0;
 }
 
 void pgResetFn_osdElementConfig(osdElementConfig_t *osdElementConfig)

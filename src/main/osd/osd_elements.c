@@ -1514,6 +1514,43 @@ static void osdElementRcChannels(osdElementParms_t *element)
     }
 }
 
+static void osdElementMultiversityLq(osdElementParms_t *element) {
+  static uint8_t multiversityLqIndex = 0;
+  static uint8_t visibleIndex = 0;
+
+  if (multiversityLqIndex == 0) {
+    if (strlen(osdConfig()->multiversity_lq1) > 0) {
+      tfp_sprintf(element->buff, "%s %d %d", osdConfig()->multiversity_lq1, (int)rcData[8] - 1000, (int)rcData[9] - 1000);
+      element->elemOffsetY = visibleIndex++;
+    }
+  } else if (multiversityLqIndex == 1) {
+    if (strlen(osdConfig()->multiversity_lq2) > 0) {
+      tfp_sprintf(element->buff, "%s %d %d", osdConfig()->multiversity_lq2, (int)rcData[10] - 1000, (int)rcData[11] - 1000);
+      element->elemOffsetY = visibleIndex++;
+    }
+  } else if (multiversityLqIndex == 2) {
+    if (strlen(osdConfig()->multiversity_lq3) > 0) {
+      tfp_sprintf(element->buff, "%s %d %d", osdConfig()->multiversity_lq3, (int)rcData[12] - 1000, (int)rcData[13] - 1000);
+      element->elemOffsetY = visibleIndex++;
+    }
+  } else { // multiversityLqIndex == 3
+    if (strlen(osdConfig()->multiversity_lq4) > 0) {
+      tfp_sprintf(element->buff, "%s %d %d", osdConfig()->multiversity_lq4, (int)rcData[14] - 1000, (int)rcData[15] - 1000);
+      element->elemOffsetY = visibleIndex++;
+    }
+  }
+
+
+  if (++multiversityLqIndex == 4) {
+    multiversityLqIndex = 0;
+    visibleIndex = 0;
+
+  } else {
+    element->rendered = false;
+  }
+}
+
+
 static void osdElementRemainingTimeEstimate(osdElementParms_t *element)
 {
     const int mAhDrawn = getMAhDrawn();
@@ -1864,6 +1901,7 @@ static const uint8_t osdElementDisplayOrder[] = {
     OSD_SYS_VTX_TEMP,
     OSD_SYS_FAN_SPEED,
 #endif
+    OSD_MULTIVERSITY_LQ
 };
 
 // Define the mapping between the OSD element id and the function to draw it
@@ -2003,6 +2041,7 @@ const osdElementDrawFn osdElementDrawFunction[OSD_ITEM_COUNT] = {
     [OSD_SYS_VTX_TEMP]            = osdElementSys,
     [OSD_SYS_FAN_SPEED]           = osdElementSys,
 #endif
+    [OSD_MULTIVERSITY_LQ]         = osdElementMultiversityLq,
 };
 
 // Define the mapping between the OSD element id and the function to draw its background (static part)
