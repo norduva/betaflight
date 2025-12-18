@@ -120,34 +120,58 @@ static uint8_t getQmiDlpfBandwidth(void)
     return 0;
 }
 
-static void qmi8658Config(gyroDev_t *gyro)
+enum ConfigStage {
+    QMI8658_CONFIG_STATE_INIT,
+    QMI8658_CONFIG_STATE_CALIB,
+    QMI8658_CONFIG_STATE_FINISHED,
+};
+
+static uint8_t qmi8658_config_state = QMI8658_CONFIG_STATE_INIT;
+static uint32_t qmi8658_calib_ts = 0;
+
+bool qmi8658Config(extDevice_t *dev)
 {
-    extDevice_t *dev = &gyro->dev;
+    switch (qmi8658_config_state) {
+        case QMI8658_CONFIG_STATE_INIT:
+            // reset the device
+            qmi8658WriteRegister(dev, QMI8658_REG_RESET, QMI8658_VAL_RESET, 20);
 
-    // reset the device
-    qmi8658WriteRegister(dev, QMI8658_REG_RESET, QMI8658_VAL_RESET, 20);
+            // On demand cali
+            qmi8658WriteRegister(dev, QMI8658_REG_CTRL9, QMI8658_VAL_CTRL9_CMD_ON_DEMAND_CALI, 0);
+            qmi8658_calib_ts = millis();
+            qmi8658_config_state = QMI8658_CONFIG_STATE_CALIB;
+            break;
+        case QMI8658_CONFIG_STATE_CALIB:
+            if (millis() - qmi8658_calib_ts > 2200) {
+                qmi8658WriteRegister(dev, QMI8658_REG_CTRL9, QMI8658_VAL_CTRL9_CMD_NOP, 100);
 
-    // On demand cali
-    qmi8658WriteRegister(dev, QMI8658_REG_CTRL9, QMI8658_VAL_CTRL9_CMD_ON_DEMAND_CALI, 2200);
-    qmi8658WriteRegister(dev, QMI8658_REG_CTRL9, QMI8658_VAL_CTRL9_CMD_NOP, 100);
+                // Configure the CTRL1
+                qmi8658WriteRegister(dev, QMI8658_REG_CTRL1, QMI8658_VAL_CTRL1, 1);
 
-    // Configure the CTRL1
-    qmi8658WriteRegister(dev, QMI8658_REG_CTRL1, QMI8658_VAL_CTRL1, 1);
+                // Disable all sensors
+                qmi8658WriteRegister(dev, QMI8658_REG_CTRL7, 0x00, 1);
 
-    // Disable all sensors
-    qmi8658WriteRegister(dev, QMI8658_REG_CTRL7, 0x00, 1);
+                // Configure the CTRL2 - ACC configuration
+                qmi8658WriteRegister(dev, QMI8658_REG_CTRL2, ((QMI8658_VAL_CTRL2_ACC_FS_16G << 4) | QMI8658_VAL_CTRL2_ACC_ODR_896), 1);
 
-    // Configure the CTRL2 - ACC configuration
-    qmi8658WriteRegister(dev, QMI8658_REG_CTRL2, ((QMI8658_VAL_CTRL2_ACC_FS_16G << 4) | QMI8658_VAL_CTRL2_ACC_ODR_896), 1);
+                // Configure the CTRL3 - GYRO configuration
+                qmi8658WriteRegister(dev, QMI8658_REG_CTRL3, ((QMI8658_VAL_CTRL3_GYRO_FS_2048DPS << 4) | QMI8658_VAL_CTRL3_GYRO_ODR_7174), 1);
 
-    // Configure the CTRL3 - GYRO configuration
-    qmi8658WriteRegister(dev, QMI8658_REG_CTRL3, ((QMI8658_VAL_CTRL3_GYRO_FS_2048DPS << 4) | QMI8658_VAL_CTRL3_GYRO_ODR_7174), 1);
+                // Configure the CTRL5 - GYRO LPF and ACC LPF configuration
+                qmi8658WriteRegisterBits(dev, QMI8658_REG_CTRL5, QMI8658_MASK_CTRL5, ((getQmiDlpfBandwidth()<<5) | QMI8658_VAL_CTRL5_GLPF_EN | (QMI8658_VAL_CTRL5_ALPF_ODR_1337<<1) | QMI8658_VAL_CTRL5_ALPF_EN), 1);
 
-    // Configure the CTRL5 - GYRO LPF and ACC LPF configuration
-    qmi8658WriteRegisterBits(dev, QMI8658_REG_CTRL5, QMI8658_MASK_CTRL5, ((getQmiDlpfBandwidth()<<5) | QMI8658_VAL_CTRL5_GLPF_EN | (QMI8658_VAL_CTRL5_ALPF_ODR_1337<<1) | QMI8658_VAL_CTRL5_ALPF_EN), 1);
+                // Enable acc gyro
+                qmi8658WriteRegisterBits(dev, QMI8658_REG_CTRL7, QMI8658_MASK_CTRL7, (QMI8658_VAL_CTRL7_G_EN | QMI8658_VAL_CTRL7_A_EN), 100);
 
-    // Enable acc gyro
-    qmi8658WriteRegisterBits(dev, QMI8658_REG_CTRL7, QMI8658_MASK_CTRL7, (QMI8658_VAL_CTRL7_G_EN | QMI8658_VAL_CTRL7_A_EN), 100);
+                qmi8658_config_state = QMI8658_CONFIG_STATE_FINISHED;
+            }
+            break;
+        case QMI8658_CONFIG_STATE_FINISHED:
+        default:
+            return true;
+    }
+
+    return false;
 }
 
 #ifdef USE_GYRO_EXTI
@@ -169,8 +193,6 @@ static void qmi8658IntExtiInit(gyroDev_t *gyro)
 static void qmi8658SpiGyroInit(gyroDev_t *gyro)
 {
     extDevice_t *dev = &gyro->dev;
-
-    qmi8658Config(gyro);
 
 #ifdef USE_GYRO_EXTI
     qmi8658IntExtiInit(gyro);

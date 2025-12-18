@@ -83,8 +83,15 @@ void qmi8658ExtiHandler(extiCallbackRec_t* cb)
 }
 #endif
 
+bool qmi8658_ready = false;
+
 bool qmi8658AccRead(accDev_t *acc)
 {
+    if (!qmi8658_ready) {
+        qmi8658_ready = qmi8658Config(&acc->gyro->dev);
+        return true;
+    }
+
     switch (acc->gyro->gyroModeSPI) {
     case GYRO_EXTI_INT:
     case GYRO_EXTI_NO_INT:
@@ -130,6 +137,11 @@ bool qmi8658AccRead(accDev_t *acc)
 
 bool qmi8658GyroRead(gyroDev_t *gyro)
 {
+    if (!qmi8658_ready) {
+        qmi8658_ready = qmi8658Config(&gyro->dev);
+        return true;
+    }
+
     int16_t *gyroData = (int16_t *)gyro->dev.rxBuf;
     switch (gyro->gyroModeSPI) {
     case GYRO_EXTI_INIT:

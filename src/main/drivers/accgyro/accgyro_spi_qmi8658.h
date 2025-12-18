@@ -52,6 +52,7 @@ typedef enum {
 uint8_t qmi8658Detect(const extDevice_t *dev);
 bool qmi8658SpiAccDetect(accDev_t *acc);
 bool qmi8658SpiGyroDetect(gyroDev_t *gyro);
+bool qmi8658Config(extDevice_t *gyro);
 
 // Contained in accgyro_spi_qmi8658.c which is speed optimized
 void qmi8658ExtiHandler(extiCallbackRec_t *cb);
