@@ -128,8 +128,8 @@ static void qmi8658Config(gyroDev_t *gyro)
     qmi8658WriteRegister(dev, QMI8658_REG_RESET, QMI8658_VAL_RESET, 20);
 
     // On demand cali
-    qmi8658WriteRegister(dev, QMI8658_REG_CTRL9, QMI8658_VAL_CTRL9_CMD_ON_DEMAND_CALI, 2200);
-    qmi8658WriteRegister(dev, QMI8658_REG_CTRL9, QMI8658_VAL_CTRL9_CMD_NOP, 100);
+    // qmi8658WriteRegister(dev, QMI8658_REG_CTRL9, QMI8658_VAL_CTRL9_CMD_ON_DEMAND_CALI, 2200);
+    // qmi8658WriteRegister(dev, QMI8658_REG_CTRL9, QMI8658_VAL_CTRL9_CMD_NOP, 100);
 
     // Configure the CTRL1
     qmi8658WriteRegister(dev, QMI8658_REG_CTRL1, QMI8658_VAL_CTRL1, 1);
