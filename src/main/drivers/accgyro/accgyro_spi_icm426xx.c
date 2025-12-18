@@ -173,9 +173,9 @@ uint8_t icm426xxSpiDetect(const extDevice_t *dev)
     spiWriteReg(dev, ICM426XX_RA_PWR_MGMT0, 0x00);
 
     uint8_t icmDetected = MPU_NONE;
-    uint8_t attemptsRemaining = 20;
+    uint8_t attemptsRemaining = 10;
     do {
-        delay(150);
+        delay(1);
         const uint8_t whoAmI = spiReadRegMsk(dev, MPU_RA_WHO_AM_I);
         switch (whoAmI) {
         case ICM42605_WHO_AM_I_CONST:
