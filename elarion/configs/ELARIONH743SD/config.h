@@ -168,7 +168,13 @@
 
 #define MAX7456_SPI_INSTANCE SPI1
 
-#define MAX7456_DISABLE_DMA
+// The OSD is an STM32G431 running SW-OSD, not a real MAX7456. Two things broke
+// DMA transfers to it: byte loss in the emulator's SPI slave (fixed in SW-OSD,
+// needs firmware >= the host-spi fix) and an MPU bug in this Betaflight version
+// that left the DMA transmit buffer cacheable (fixed in memprot_hal.c, upstream
+// #15441). With both in place DMA works; define this only to fall back to the
+// polled path on a board with old OSD firmware.
+// #define MAX7456_DISABLE_DMA
 
 
 #define PINIO1_BOX 40
