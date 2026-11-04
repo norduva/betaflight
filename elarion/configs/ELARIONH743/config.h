@@ -42,6 +42,8 @@
 #define USE_MAG
 #define USE_MAG_LIS2MDL
 
+#define USE_CHIRP
+
 //Both use PC11, so choose: flash or sdcard blackbox
 #define USE_FLASH
 #define USE_FLASH_M25P16
@@ -166,6 +168,9 @@
 
 
 #define MAX7456_SPI_INSTANCE SPI1
+
+#define MAX7456_MAX_SPI_CLK_HZ      1000000
+#define MAX7456_INIT_MAX_SPI_CLK_HZ 1000000
 
 
 #define PINIO1_BOX 40

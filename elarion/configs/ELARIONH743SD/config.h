@@ -42,6 +42,8 @@
 #define USE_MAG
 #define USE_MAG_LIS2MDL
 
+#define USE_CHIRP
+
 // Flash and SD card share the SPI3 chip select on PC11, so only one of the two
 // blocks below may be enabled at a time.
 // #define USE_FLASH
@@ -167,6 +169,9 @@
 
 
 #define MAX7456_SPI_INSTANCE SPI1
+
+#define MAX7456_MAX_SPI_CLK_HZ      1000000
+#define MAX7456_INIT_MAX_SPI_CLK_HZ 1000000
 
 
 #define PINIO1_BOX 40

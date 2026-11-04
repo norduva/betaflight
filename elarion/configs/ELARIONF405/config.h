@@ -37,6 +37,8 @@
 #define USE_MAG
 #define USE_MAG_LIS2MDL
 
+#define USE_CHIRP
+
 #define BEEPER_PIN PC15
 #define MOTOR1_PIN PB6
 #define MOTOR2_PIN PB7
